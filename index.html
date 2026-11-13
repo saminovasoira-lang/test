@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Olami - Bilimni sinab ko'ring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .stat-badge {
+            padding: 8px 18px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .stat-badge.coin {
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            color: #333;
+        }
+
+        .stat-badge.level {
+            background: linear-gradient(135deg, #84fab0, #8fd3f4);
+            color: #333;
+        }
+
+        .stat-badge.rank {
+            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            color: #333;
+        }
+
+        .rank-silver {
+            background: linear-gradient(135deg, #bdc3c7, #2c3e50) !important;
+            color: #fff !important;
+        }
+
+        .rank-gold {
+            background: linear-gradient(135deg, #f6d365, #d4a017) !important;
+            color: #333 !important;
+        }
+
+        .rank-diamond {
+            background: linear-gradient(135deg, #b9f2ff, #89cff0, #4682b4) !important;
+            color: #333 !important;
+        }
+
+        .rank-master {
+            background: linear-gradient(135deg, #ff0844, #ffb199, #667eea, #764ba2) !important;
+            color: #fff !important;
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+
+            0%,
+            100% {
+                filter: brightness(1)
+            }
+
+            50% {
+                filter: brightness(1.3)
+            }
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            color: #fff;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #eb3349, #f45c43);
+            color: #fff;
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* === Home page === */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .subject-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            backdrop-filter: blur(10px);
+        }
+
+        .subject-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .subject-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .subject-name {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .subject-count {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* === Quiz page === */
+        .quiz-box {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        .question-text {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 18px 25px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .option.correct {
+            border-color: #38ef7d;
+            background: rgba(56, 239, 125, 0.2);
+        }
+
+        .option.wrong {
+            border-color: #f45c43;
+            background: rgba(244, 92, 67, 0.2);
+        }
+
+        .option-letter {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .quiz-footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .quiz-items {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .quiz-item-btn {
+            padding: 10px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quiz-item-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
+        }
+
+        .quiz-item-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .quiz-item-btn .qty {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .option.hidden-opt {
+            opacity: 0.2;
+            pointer-events: none;
+            filter: blur(2px);
+        }
+
+        /* Neon Theme */
+        body.theme-neon {
+            background: linear-gradient(135deg, #0a0014 0%, #1a0033 50%, #002a2a 100%);
+        }
+
+        body.theme-neon .header,
+        body.theme-neon .quiz-box,
+        body.theme-neon .subject-card,
+        body.theme-neon .shop-item,
+        body.theme-neon .admin-panel,
+        body.theme-neon .leaderboard,
+        body.theme-neon .modal-content {
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), 0 0 40px rgba(255, 0, 255, 0.2);
+        }
+
+        body.theme-neon .logo {
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: hueShift 3s infinite;
+        }
+
+        @keyframes hueShift {
+            0% {
+                filter: hue-rotate(0deg)
+            }
+
+            100% {
+                filter: hue-rotate(360deg)
+            }
+        }
+
+        body.theme-neon .btn-primary {
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.6);
+        }
+
+        body.theme-neon .option.correct {
+            box-shadow: 0 0 15px #38ef7d;
+        }
+
+        body.theme-neon .option.wrong {
+            box-shadow: 0 0 15px #f45c43;
+        }
+
+        /* Pet Cat */
+        .pet-cat {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            font-size: 60px;
+            z-index: 999;
+            animation: catBounce 2s infinite ease-in-out;
+            cursor: pointer;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
+        }
+
+        @keyframes catBounce {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-3deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(3deg);
+            }
+        }
+
+        .pet-cat:hover::after {
+            content: "Miyov!";
+            position: absolute;
+            top: -25px;
+            right: 0;
+            background: #fff;
+            color: #333;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* === Result Modal === */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 40px;
+            border-radius: 25px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: popIn 0.4s;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        .result-title {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .result-stat {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .result-stat-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .coin-earned {
+            color: #f6d365;
+            font-size: 24px;
+            margin: 15px 0;
+        }
+
+        .level-up {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: bold;
+            font-size: 18px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1)
+            }
+
+            50% {
+                transform: scale(1.05)
+            }
+        }
+
+        /* === Shop === */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .shop-item {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .shop-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .shop-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .shop-desc {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+
+        .shop-price {
+            color: #f6d365;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .shop-owned {
+            color: #38ef7d;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+
+        /* === Admin Panel === */
+        .admin-panel {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .admin-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+        }
+
+        .admin-section h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 15px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .coins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .coin-pack {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .coin-pack:hover {
+            background: rgba(246, 211, 101, 0.2);
+            transform: scale(1.05);
+        }
+
+        .coin-pack-amount {
+            font-size: 30px;
+            color: #f6d365;
+            font-weight: bold;
+        }
+
+        .coin-pack-cost {
+            margin-top: 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .inventory-list {
+            margin-top: 15px;
+        }
+
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* === Leaderboard === */
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .leaderboard-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 120px 150px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            align-items: center;
+        }
+
+        .leaderboard-row.top-1 {
+            background: linear-gradient(135deg, rgba(246, 211, 101, 0.3), rgba(212, 160, 23, 0.3));
+        }
+
+        .leaderboard-row.top-2 {
+            background: linear-gradient(135deg, rgba(189, 195, 199, 0.2), rgba(44, 62, 80, 0.2));
+        }
+
+        .leaderboard-row.top-3 {
+            background: linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(139, 69, 19, 0.2));
+        }
+
+        .rank-num {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+            }
+
+            .quiz-box,
+            .admin-panel,
+            .leaderboard {
+                padding: 20px;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+
+            .leaderboard-row {
+                grid-template-columns: 50px 1fr 80px;
+                font-size: 13px;
+            }
+
+            .leaderboard-row> :last-child {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">📚 Test Olami</div>
+            <div class="user-info">
+                <div class="stat-badge coin">🪙 <span id="coins-display">0</span></div>
+                <div class="stat-badge level">⭐ LVL <span id="level-display">1</span></div>
+                <div class="stat-badge rank" id="rank-badge">🏅 Yangi</div>
+            </div>
+            <div class="nav-btns">
+                <button class="btn btn-outline" onclick="showPage('home')">🏠 Bosh sahifa</button>
+                <button class="btn btn-success" onclick="showPage('shop')">🛒 Do'kon</button>
+                <button class="btn btn-primary" onclick="showPage('leaderboard')">🏆 Reyting</button>
+                <button class="btn btn-warning" onclick="showPage('admin')">⚙️ Admin</button>
+            </div>
+        </div>
+
+        <!-- Home Page - Subjects -->
+        <div id="page-home" class="page active">
+            <h2 style="margin-bottom:25px; text-align:center;">🎯 Fanni tanlang</h2>
+            <div class="subjects-grid" id="subjects-grid"></div>
+        </div>
+
+        <!-- Quiz Page -->
+        <div id="page-quiz" class="page">
+            <div class="quiz-box">
+                <div class="quiz-header">
+                    <div style="font-size:18px; font-weight:bold;" id="quiz-subject-name">Fan</div>
+                    <div style="font-size:16px;">
+                        <span id="current-q">1</span> / <span id="total-q">5</span>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 20%"></div>
+                </div>
+                <div class="quiz-items" id="quiz-items">
+                    <button class="quiz-item-btn" id="btn-hint" onclick="useItem('hint')"
+                        title="1 ta noto'g'ri javobni yashirish">
+                        💡 Maslahat <span class="qty" id="qty-hint">0</span>
+                    </button>
+                    <button class="quiz-item-btn" id="btn-fifty" onclick="useItem('fifty')"
+                        title="2 ta noto'g'ri javobni yashirish">
+                        🎯 50/50 <span class="qty" id="qty-fifty">0</span>
+                    </button>
+                    <button class="quiz-item-btn" id="btn-skip" onclick="useItem('skip_q')"
+                        title="Savolni o'tkazib yuborish (50% ball)">
+                        ⏭️ O'tkazish <span class="qty" id="qty-skip">0</span>
+                    </button>
+                </div>
+                <div class="question-text" id="question-text">Savol matni...</div>
+                <div class="options" id="options-container"></div>
+                <div class="quiz-footer">
+                    <button class="btn btn-outline" onclick="quitQuiz()">🚪 Chiqish</button>
+                    <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>Keyingi ➡️</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shop Page -->
+        <div id="page-shop" class="page">
+            <h2 style="margin-bottom:25px; text-align:center;">🛒 Do'kon</h2>
+            <div class="shop-grid" id="shop-grid"></div>
+
+            <h3 style="margin:40px 0 20px; text-align:center;">🎁 Mening inventarim</h3>
+            <div class="inventory-list" id="inventory-list"></div>
+        </div>
+
+        <!-- Admin Page -->
+        <div id="page-admin" class="page">
+            <h2 style="margin-bottom:25px; text-align:center;">⚙️ Admin Panel</h2>
+            <div class="admin-panel">
+
+                <div class="admin-section">
+                    <h3>💰 Tanga qo'shish</h3>
+                    <p style="color:rgba(255,255,255,0.6); margin-bottom:10px;">To'g'ri javob uchun 5 tanga beriladi. Bu
+                        yerda qo'shimcha tanga harid qilishingiz mumkin:</p>
+                    <div class="coins-grid" id="coins-grid"></div>
+                </div>
+
+                <div class="admin-section">
+                    <h3>👤 Foydalanuvchi ma'lumotlari</h3>
+                    <div class="form-group">
+                        <label>Ism</label>
+                        <input type="text" class="form-control" id="input-name" placeholder="Ismingizni kiriting">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveName(et6yy)">💾 Saqlash</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>📊 Umumiy statistika</h3>
+                    <div id="stats-display" style="line-height:2; font-size:16px;"></div>
+                    <button class="btn btn-danger" style="margin-top:20px;" onclick="resetProgress()">🗑️ Barcha
+                        progressni o'chirish</button>
+                </div>
+
+                <div class="admin-section">
+                    <h3>🎯 EXP va Level tizimi</h3>
+                    <p style="color:rgba(255,255,255,0.6); margin-bottom:15px;">
+                        Har to'g'ri javob = 10 EXP. Har 100 EXP = 1 Level.<br>
+                        🥈 10 Level = Silver<br>
+                        🥇 30 Level = Gold<br>
+                        💎 40 Level = Diamond<br>
+                        👑 50 Level = Master
+                    </p>
+                    <button class="btn btn-warning" onclick="addExpBonus()">⭐ +100 EXP (Bonus)</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Leaderboard Page -->
+        <div id="page-leaderboard" class="page">
+            <h2 style="margin-bottom:25px; text-align:center;">🏆 Reyting</h2>
+            <div class="leaderboard" id="leaderboard"></div>
+        </div>
+
+    </div>
+
+    <!-- Result Modal -->
+    <div class="modal" id="result-modal">
+        <div class="modal-content">
+            <div class="result-title">🎉 Test natijasi</div>
+            <div id="level-up-alert"></div>
+            <div class="result-stats">
+                <div class="result-stat">
+                    <div style="color:#38ef7d;" class="result-stat-value" id="result-correct">0</div>
+                    <div>To'g'ri</div>
+                </div>
+                <div class="result-stat">
+                    <div style="color:#f45c43;" class="result-stat-value" id="result-wrong">0</div>
+                    <div>Noto'g'ri</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-value" id="result-percent">0%</div>
+                    <div>Foiz</div>
+                </div>
+                <div class="result-stat">
+                    <div style="color:#84fab0;" class="result-stat-value" id="result-exp">+0</div>
+                    <div>EXP</div>
+                </div>
+            </div>
+            <div class="coin-earned">🪙 +<span id="result-coins">0</span> tanga berildi!</div>
+            <div style="display:flex; gap:10px; justify-content:center; margin-top:20px; flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="restartQuiz()">🔄 Qayta urinish</button>
+                <button class="btn btn-success" onclick="goHome()">🏠 Bosh sahifa</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ DATA ============
+        const SUBJECTS = [
+            { id: 'math', name: 'Matematika', icon: '🔢' },
+            { id: 'phys', name: 'Fizika', icon: '⚛️' },
+            { id: 'chem', name: 'Kimyo', icon: '🧪' },
+            { id: 'bio', name: 'Biologiya', icon: '🧬' },
+            { id: 'hist', name: 'Tarix', icon: '📜' },
+            { id: 'lang', name: 'Ona tili', icon: '📖' }
+        ];
+
+        const SHOP_ITEMS = [
+            { id: 'double_coin', name: '2x Tanga', icon: '💎', desc: 'Keyingi 10 ta test uchun tangalar 2 barobar', price: 50, type: 'effect', value: { doubleCoin: 10 } },
+            { id: 'triple_coin', name: '3x Tanga (Epik)', icon: '👑', desc: 'Keyingi 5 ta test uchun tangalar 3 barobar!', price: 150, type: 'effect', value: { tripleCoin: 5 } },
+            { id: 'mega_coin', name: '10x Tanga (Legenda)', icon: '🌟', desc: 'Keyingi 3 ta test uchun tangalar 10 barobar!', price: 500, type: 'effect', value: { megaCoin: 3 } },
+            { id: 'exp_boost', name: 'EXP Boost 1.5x', icon: '⚡', desc: 'Keyingi 5 ta test uchun EXP 1.5x', price: 30, type: 'effect', value: { expBoost: 5 } },
+            { id: 'exp_x2', name: 'EXP Boost 2x', icon: '💥', desc: 'Keyingi 5 ta test uchun EXP 2 barobar!', price: 80, type: 'effect', value: { expX2: 5 } },
+            { id: 'exp_x5', name: 'EXP Boost 5x', icon: '🚀', desc: 'Keyingi 3 ta test uchun EXP 5 barobar!', price: 200, type: 'effect', value: { expX5: 3 } },
+            { id: 'shield', name: 'Qalqon (Shield)', icon: '🛡️', desc: '1 ta noto`g`ri javobni to`g`rilab beradi', price: 40, type: 'item', uses: 1 },
+            { id: 'shield_x3', name: 'Super Qalqon', icon: '🏆', desc: '3 ta noto`g`ri javobni to`g`rilash', price: 100, type: 'item', uses: 3 },
+            { id: 'auto_correct', name: 'Avto-To`g`ri', icon: '✅', desc: '1 ta savolni avtomatik to`g`ri javob beradi', price: 50, type: 'item', uses: 1 },
+            { id: 'auto_correct_x5', name: '5x Avto-To`g`ri', icon: '💯', desc: '5 ta savolni avtomatik to`g`ri qiladi', price: 200, type: 'item', uses: 5 },
+            { id: 'super_hint', name: 'Super Maslahat', icon: '🔮', desc: 'Bitta savolda 3 ta noto`g`ri javobni yashiradi', price: 35, type: 'item', uses: 1 },
+            { id: 'skip_q', name: 'Savol o`tkazish', icon: '⏭️', desc: '1 ta savolni o`tkazib yuborish (50%)', price: 20, type: 'item', uses: 1 },
+            { id: 'skip_x5', name: '5x O`tkazish', icon: '⏩', desc: '5 ta savolni o`tkazish imkoniyati', price: 80, type: 'item', uses: 5 },
+            { id: 'hint', name: 'Maslahatat', icon: '💡', desc: '1 ta noto`g`ri javobni yashirish (3 dona)', price: 10, type: 'item', uses: 3 },
+            { id: 'hint_x10', name: 'Maslahat x10', icon: '💡', desc: '10 dona maslahat', price: 25, type: 'item', uses: 10 },
+            { id: 'fifty', name: '50/50', icon: '🎯', desc: '2 ta noto`g`ri javobni yashirish (2 dona)', price: 15, type: 'item', uses: 2 },
+            { id: 'fifty_x10', name: '50/50 x10', icon: '🎯', desc: '10 dona 50/50', price: 60, type: 'item', uses: 10 },
+            { id: 'lucky_charm', name: 'Omadli muska', icon: '🍀', desc: '1 ta testda barcha savollar 20% omadli', price: 60, type: 'effect', value: { lucky: 1 } },
+            { id: 'streak_x2', name: 'Streak Bonus', icon: '🔥', desc: '2 ta undan ortiq to`g`ri ketma-ketlik + qo`shimcha 10 tanga', price: 70, type: 'effect', value: { streak: 3 } },
+            { id: 'medal_s', name: 'Silver Medal', icon: '🥈', desc: 'Silver unvonini oldindan ochish', price: 200, type: 'unlock', value: 'silver' },
+            { id: 'medal_g', name: 'Gold Medal', icon: '🥇', desc: 'Gold unvonini oldindan ochish', price: 500, type: 'unlock', value: 'gold' },
+            { id: 'medal_d', name: 'Diamond Medal', icon: '💠', desc: 'Diamond unvonini oldindan ochish', price: 800, type: 'unlock', value: 'diamond' },
+            { id: 'medal_m', name: 'Master Crown', icon: '👑', desc: 'Master unvonini oldindan ochish', price: 1500, type: 'unlock', value: 'master' },
+            { id: 'theme_n', name: 'Neon mavzu', icon: '🌈', desc: 'Neon effektlari bilan yorqin fon', price: 100, type: 'cosmetic', value: 'neon' },
+            { id: 'theme_sunset', name: 'Sunset mavzu', icon: '🌅', desc: 'Quyosh botishi fon - to`liq orange-pink', price: 120, type: 'cosmetic', value: 'sunset' },
+            { id: 'theme_ocean', name: 'Ocean mavzu', icon: '🌊', desc: 'Moviy-ocean va to`lqinlar fon', price: 120, type: 'cosmetic', value: 'ocean' },
+            { id: 'theme_fire', name: 'Fire mavzu', icon: '🔥', desc: 'Qizil-olov va shamollar fon', price: 140, type: 'cosmetic', value: 'fire' },
+            { id: 'theme_galaxy', name: 'Galaxy mavzu', icon: '🌌', desc: 'Galaxy yulduzlar va kosmos fon', price: 160, type: 'cosmetic', value: 'galaxy' },
+            { id: 'theme_matrix', name: 'Matrix mavzu', icon: '🟢', desc: 'Matrix yashil raqamlar yomg`iri', price: 150, type: 'cosmetic', value: 'matrix' },
+            { id: 'theme_candy', name: 'Candy mavzu', icon: '🍭', desc: 'Shirinlik-pembe ko`k moyak fon', price: 130, type: 'cosmetic', value: 'candy' },
+            { id: 'pet_cat', name: 'Mushuk uy hayvoni', icon: '🐱', desc: 'Sahifada mushuk doimo siz bilan', price: 150, type: 'cosmetic', value: 'cat' },
+            { id: 'pet_dog', name: 'It uy hayvoni', icon: '🐶', desc: 'Sadoqatli it siz bilan raqsga tushadi', price: 180, type: 'cosmetic', value: 'dog' },
+            { id: 'pet_fox', name: 'Tulki uy hayvoni', icon: '🦊', desc: 'Yovvoyi va aqlli tulki', price: 200, type: 'cosmetic', value: 'fox' },
+            { id: 'pet_panda', name: 'Panda uy hayvoni', icon: '🐼', desc: 'Xincha - yoqimli pandam', price: 250, type: 'cosmetic', value: 'panda' },
+            { id: 'pet_turtle', name: 'Toshbaqa uy hayvoni', icon: '🐢', desc: 'Sekin, ammo bardoshli toshbaqa', price: 130, type: 'cosmetic', value: 'turtle' },
+            { id: 'pet_unicorn', name: 'Unicorn (Afsonaviy)', icon: '🦄', info: 'Nojoyib ot - yulduz changi bilan', price: 500, type: 'cosmetic', value: 'unicorn' },
+            { id: 'pet_dragon', name: 'Dragon (Efsunli)', icon: '🐉', desc: 'Uluq ajdarho - baxt keltiradi', price: 800, type: 'cosmetic', value: 'dragon' },
+            { id: 'pet_owl', name: 'Boyqush uy hayvoni', icon: '🦉', desc: 'Donolgan boyqush maslahat beradi', price: 220, type: 'cosmetic', value: 'owl' },
+            { id: 'pet_koala', name: 'Koala uy hayvoni', icon: '🐨', desc: 'Yumshoq koala dam oladi', price: 210, type: 'cosmetic', value: 'koala' },
+            { id: 'pet_penguin', name: 'Pingvin uy hayvoni', icon: '🐧', desc: 'Antarktidadan kelgan pingvin', price: 170, type: 'cosmetic', value: 'penguin' },
+            { id: 'coin_chest', name: 'Oddiy sandiq', icon: '🎁', desc: 'Random 10-100 tanga yutuq', price: 30, type: 'chest', value: { min: 10, max: 100 } },
+            { id: 'bronze_chest', name: 'Bronza sandiq', icon: '📦', desc: '20-200 tanga + imkoniyatli item', price: 80, type: 'chest', value: { min: 20, max: 200 } },
+            { id: 'silver_chest', name: 'Kumush sandiq', icon: '🎀', desc: '100-500 tanga + EXP bonus', price: 200, type: 'chest', value: { min: 100, max: 500 } },
+            { id: 'gold_chest', name: 'Oltin sandiq', icon: '�', desc: '300-1000 tanga + 50% EXP', price: 500, type: 'chest', value: { min: 300, max: 1000 } },
+            { id: 'diamond_chest', name: 'Olmos sandiq', icon: '💎', desc: '1000-5000 tanga + random kosmetika!', price: 1200, type: 'chest', value: { min: 1000, max: 5000 } },
+            { id: 'mystery_box', name: 'Sirlari katta quti', icon: '❓', desc: 'Random narsa: tanga, EXP yoki kosmetika!', price: 80, type: 'chest', value: { mystery: true } },
+            { id: 'ultra_box', name: 'Ultra Mega Quti', icon: '💠', desc: 'Ultra o`y-in: 5000-20000 tanga!', price: 3000, type: 'chest', value: { min: 5000, max: 20000 } },
+            { id: 'xp_potion_small', name: 'Kichik EXP ichimlik', icon: '🧪', desc: 'Darhol +50 EXP qo`shiladi', price: 25, type: 'potion', value: { exp: 50 } },
+            { id: 'xp_potion_big', name: 'Katta EXP ichimlik', icon: '🍷', desc: 'Darhol +500 EXP qo`shiladi', price: 200, type: 'potion', value: { exp: 500 } },
+            { id: 'xp_potion_giant', name: 'Ultra EXP (Gigant)', icon: '⚗️', desc: 'Darhol +2000 EXP oling!', price: 800, type: 'potion', value: { exp: 2000 } },
+            { id: 'coin_pouch', name: 'Tanga sumkasi', icon: '💰', desc: 'Darhol +100 tanga olasiz', price: 80, type: 'potion', value: { coin: 100 } },
+            { id: 'coin_bag', name: 'Katta sumka', icon: '👜', desc: 'Darhol +1000 tanga!', price: 800, type: 'potion', value: { coin: 1000 } },
+            { id: 'starter_pack', name: 'Boshlang`ich to`plam', icon: '📚', desc: 'Maslahat x5 + 50/50 x5 + Skip x5', price: 80, type: 'pack', value: { hint: 5, fifty: 5, skip_q: 5 } },
+            { id: 'pro_pack', name: 'Professional to`plam', icon: '🎓', desc: 'Shield x3 + Avto-to`g`ri x3 + DoubleCoin x5', price: 350, type: 'pack', value: { shield: 3, auto_correct: 3, doubleCoin: 5 } },
+            { id: 'legend_pack', name: 'Afsonaviy to`plam', icon: '⚔️', desc: 'Exp x2 x5 + 3xTanga x3 + Shield x10', price: 1500, type: 'pack', value: { expX2: 5, tripleCoin: 3, shield: 10 } },
+            { id: 'cosmetic_pack', name: 'Kosmetika to`plam', icon: '🎨', desc: 'Sunset + Ocean + Panda uy hayvon', price: 400, type: 'pack', value: { cosmetic: ['sunset', 'ocean'], pet: 'panda' } }
+        ];
+
+        // ============ TEST GENERATION ============
+        function generateMathQuestions() {
+            const qs = [];
+            for (let i = 0; i < 1000; i++) {
+                const type = i % 5;
+                let q, a, opts;
+                if (type === 0) {
+                    const x = Math.floor(Math.random() * 50) + 1;
+                    const y = Math.floor(Math.random() * 50) + 1;
+                    q = `${x} + ${y} = ?`;
+                    a = x + y;
+                    opts = [a, a + 5, a - 3, a + 10];
+                } else if (type === 1) {
+                    const x = Math.floor(Math.random() * 30) + 5;
+                    const y = Math.floor(Math.random() * x) + 1;
+                    q = `${x} - ${y} = ?`;
+                    a = x - y;
+                    opts = [a, a + 2, a - 2, a + 5];
+                } else if (type === 2) {
+                    const x = Math.floor(Math.random() * 12) + 2;
+                    const y = Math.floor(Math.random() * 12) + 2;
+                    q = `${x} × ${y} = ?`;
+                    a = x * y;
+                    opts = [a, a + x, a + y, a - x];
+                } else if (type === 3) {
+                    const y = Math.floor(Math.random() * 10) + 2;
+                    const a2 = Math.floor(Math.random() * 10) + 1;
+                    const x = y * a2;
+                    q = `${x} ÷ ${y} = ?`;
+                    a = a2;
+                    opts = [a, a + 1, a - 1, a + 2];
+                } else {
+                    const x = Math.floor(Math.random() * 15) + 2;
+                    q = `${x}² = ?`;
+                    a = x * x;
+                    opts = [a, a + x, a - x, a + 2 * x];
+                }
+                opts = shuffle([...new Set(opts.map(v => Math.max(0, v)))]);
+                if (opts.length < 4) opts = opts.concat([a + 100, a + 200]).slice(0, 4);
+                const correctIdx = opts.indexOf(a);
+                if (correctIdx === -1) { opts[0] = a; shuffle(opts); }
+                qs.push({ q, options: opts.map(String), answer: opts.indexOf(a) });
+            }
+            return qs;
+        }
+
+        function generatePhysQuestions() {
+            const topics = [
+                { q: "Yerning tortish kuchi qancha?", opts: ["9.8 m/s²", "10 m/s²", "8.9 m/s²", "11 m/s²"], a: 0 },
+                { q: "Yorug'lik tezligi qancha?", opts: ["300,000 km/s", "150,000 km/s", "500,000 km/s", "1,000,000 km/s"], a: 0 },
+                { q: "Elektr tokining birligi nima?", opts: ["Amper", "Volt", "Ohm", "Vatt"], a: 0 },
+                { q: "Quvvatning birligi nima?", opts: ["Nyuton", "Joul", "Vatt", "Paskal"], a: 0 },
+                { q: "Ishning birligi nima?", opts: ["Joul", "Nyuton", "Vatt", "Amper"], a: 0 },
+                { q: "Tezlik birligi nima?", opts: ["m/s", "km/h", "m/s²", "kg"], a: 0 },
+                { q: "Tezlanish birligi nima?", opts: ["m/s²", "m/s", "km/h", "N"], a: 0 },
+                { q: "Bosim birligi nima?", opts: ["Paskal", "Nyuton", "Joul", "Vatt"], a: 0 },
+                { q: "F = ma formulasida F nimani bildiradi?", opts: ["Kuch", "Massa", "Tezlanish", "Tezlik"], a: 0 },
+                { q: "Yer atmosferasidagi havo bosimi qancha?", opts: ["1 atm ≈ 101325 Pa", "50000 Pa", "200000 Pa", "10000 Pa"], a: 0 },
+                { q: "Quyoshdan Yerga tushayotgan yorug'lik necha soniyada yetib boradi?", opts: ["8 daqiqa ≈ 480 soniya", "1 daqiqa", "1 soat", "1 soniya"], a: 0 },
+                { q: "Eng oddiy atom qaysi?", opts: ["Vodorod", "Geliy", "Oksigen", "Uglerod"], a: 0 },
+                { q: "Yerning aylanish davomiyligi qancha?", opts: ["24 soat", "12 soat", "48 soat", "365 kun"], a: 0 },
+                { q: "Suvning qaynash harorati qancha?", opts: ["100 °C", "0 °C", "50 °C", "200 °C"], a: 0 },
+                { q: "P = U * I formulasida P nimani bildiradi?", opts: ["Quvvat", "Kuchlanish", "Tok", "Qarshilik"], a: 0 }
+            ];
+            const qs = [];
+            for (let i = 0; i < 1000; i++) {
+                if (i < topics.length) {
+                    const t = topics[i];
+                    qs.push({ q: t.q, options: t.opts, answer: t.a });
+                } else {
+                    const base = topics[i % topics.length];
+                    const num = Math.floor(i / topics.length);
+                    const variants = [
+                        `[${num}] ${base.q}`,
+                        base.q,
+                        `Masala: ${base.q}`,
+                        `Haqiqatda: ${base.q}`
+                    ];
+                    qs.push({ q: variants[i % 4], options: base.opts, answer: base.a });
+                }
+            }
+            return qs;
+        }
+
+        function generateChemQuestions() {
+            const topics = [
+                { q: "Suvning kimyoviy formulasi?", opts: ["H₂O", "CO₂", "O₂", "H₂"], a: 0 },
+                { q: "Oksigen elementining ramzi?", opts: ["O", "Ox", "Os", "Og"], a: 0 },
+                { q: "Temirning ramzi?", opts: ["Fe", "Te", "Ir", "Tm"], a: 0 },
+                { q: "Oltinning ramzi?", opts: ["Au", "Ag", "Al", "Sn"], a: 0 },
+                { q: "Kumushning ramzi?", opts: ["Ag", "Au", "Pt", "Cu"], a: 0 },
+                { q: "Uglerod dioksid formulasi?", opts: ["CO₂", "CO", "C₂O", "O₂C"], a: 0 },
+                { q: "Dastlabki element jadvalidan?", opts: ["Vodorod H", "Geliy He", "Litiy Li", "Berilliy Be"], a: 0 },
+                { q: "Havo tarkibida eng ko'p bo'lgan gaz?", opts: ["Azot N₂", "Oksigen O₂", "CO₂", "Argon"], a: 0 },
+                { q: "Tuzning formulasi?", opts: ["NaCl", "KCl", "HCl", "NaOH"], a: 0 },
+                { q: "Sirka kislota formulasi?", opts: ["CH₃COOH", "HCl", "H₂SO₄", "HNO₃"], a: 0 },
+                { q: "Azot formulasi?", opts: ["N₂", "N", "NO₂", "NH₃"], a: 0 },
+                { q: "Ammiak formulasi?", opts: ["NH₃", "NO₂", "HNO₃", "N₂O"], a: 0 },
+                { q: "Sulfat kislota formulasi?", opts: ["H₂SO₄", "HCl", "HNO₃", "H₃PO₄"], a: 0 },
+                { q: "Xlor formulasi?", opts: ["Cl₂", "Cl", "HCl", "NaCl"], a: 0 },
+                { q: "Etanol formulasi?", opts: ["C₂H₅OH", "CH₃OH", "H₂O", "CH₄"], a: 0 }
+            ];
+            const qs = [];
+            for (let i = 0; i < 1000; i++) {
+                const t = topics[i % topics.length];
+                const num = Math.floor(i / topics.length) + 1;
+                qs.push({ q: `[${num}] ${t.q}`, options: t.opts, answer: t.a });
+            }
+            return qs;
+        }
+
+        function generateBioQuestions() {
+            const topics = [
+                { q: "Odamda necha xromosoma?", opts: ["46 ta", "23 ta", "44 ta", "48 ta"], a: 0 },
+                { q: "Qizil qon hujayrasining vazifasi?", opts: ["Oksigen tashish", "Immunitet", "Qon ivishi", "To'xinlarni chiqarish"], a: 0 },
+                { q: "O'pka bizga nima uchun kerak?", opts: ["Nafas olish", "Ovqat hazm qilish", "Qon filtrlash", "Suvni saqlash"], a: 0 },
+                { q: "Odamning eng katta organi?", opts: ["Teri", "Jigar", "O'pka", "Miya"], a: 0 },
+                { q: "Qonda qanday shakar bor?", opts: ["Glyukoza", "Fruktoza", "Saxaroza", "Maltoza"], a: 0 },
+                { q: "DNK nimani ifodalaydi?", opts: ["Deksiribonuklein kislotasi", "Ribonuklein kislotasi", "Oqsil", "Yog'"], a: 0 },
+                { q: "Fotosintez qaysi organlarda sodir bo'ladi?", opts: ["Barglar", "Ildizlar", "Poyasi", "Mevalar"], a: 0 },
+                { q: "Odam qonining pH darajasi?", opts: ["Taxminan 7.4", "6.0", "8.5", "5.5"], a: 0 },
+                { q: "Miyacha necha qismdan iborat?", opts: ["2 ta (o'ng va chap yarim shar)", "3 ta", "4 ta", "5 ta"], a: 0 },
+                { q: "Vitamin C qaysi mevada ko'p?", opts: ["Pomidor va sitrus mevalari", "Olma", "Gilos", "Banan"], a: 0 },
+                { q: "Suyaklarni mustahkamlovchi vitamin?", opts: ["D vitamin", "C vitamin", "A vitamin", "B vitamin"], a: 0 },
+                { q: "Oksimetr nimani o'lchaydi?", opts: ["Qondagi kislorod darajasi", "Qon bosimi", "Harorat", "Yurak urishi"], a: 0 },
+                { q: "Yurakning katta aylanishi?", opts: ["O'pka aylanishi", "Tana aylanishi", "Ovqat hazm qilish", "Jigar filtrlanishi"], a: 1 },
+                { q: "Insulin qaysi organ tomonidan chiqariladi?", opts: ["Oshqozon osti bezi", "Jigar", "Buyrak", "Qalqonsimon bez"], a: 0 },
+                { q: "Buyrakning asosiy vazifasi?", opts: ["Qonni filtrlash", "Ovqat hazm qilish", "Qon hosil qilish", "Hormone chiqarish"], a: 0 }
+            ];
+            const qs = [];
+            for (let i = 0; i < 1000; i++) {
+                const t = topics[i % topics.length];
+                const num = Math.floor(i / topics.length) + 1;
+                qs.push({ q: `[${num}] ${t.q}`, options: t.opts, answer: t.a });
+            }
+            return qs;
+        }
+
+        function generateHistQuestions() {
+            const topics = [
+                { q: "O'zbekiston mustaqillik sanasi?", opts: ["1991-yil 31-avgust", "1990-yil 1-yanvar", "1992-yil 1-may", "1989-yil 9-may"], a: 0 },
+                { q: "Temur (Amir Temur) necha yilda tug'ilgan?", opts: ["1336-yil", "1200-yil", "1405-yil", "1500-yil"], a: 0 },
+                { q: "II Jahon urushi necha yilda tugallangan?", opts: ["1945-yil", "1939-yil", "1918-yil", "1950-yil"], a: 0 },
+                { q: "Samarqandda qaysi maqbara joylashgan?", opts: ["G'or Amir maqbarasi", "Ibrohim Otalar", "Shayxontohur", "Khodja Doniyor"], a: 0 },
+                { q: "O'zbekiston poytaxti qaysi shahar?", opts: ["Toshkent", "Samarqand", "Buxoro", "Xiva"], a: 0 },
+                { q: "Buyuk Ipak yo'li qaysi davrda rivojlangan?", opts: ["Qadimgi o'rta asrlar", "XX asr", "Zamonaviy davr", "Yangi asrlar"], a: 0 },
+                { q: "Alisher Navoiy necha yilda tug'ilgan?", opts: ["1441-yil", "1500-yil", "1300-yil", "1600-yil"], a: 0 },
+                { q: "Toshkent shahri nechanchi yilda poytaxt bo'lgan?", opts: ["1930-yil", "1924-yil", "1991-yil", "1868-yil"], a: 0 },
+                { q: "Jaloliddin Manguberdi qaysi davr hukmdori?", opts: ["Xorazmshohlar davri", "Amir Temur", "Temuriylar", "Qo'qon xonligi"], a: 0 },
+                { q: "O'zbekiston Xalqlar do'stligi maydoni qaysi shaharda?", opts: ["Toshkent", "Samarqand", "Buxoro", "Andijon"], a: 0 },
+                { q: "Chingizxon qaysi davrda yashagan?", opts: ["XII-XIII asrlar", "XV asr", "X asr", "XVI asr"], a: 0 },
+                { q: "Mevorannahr nomi nimani bildiradi?", opts: ["Daryolar orasidagi yerlar (Sirdaryo va Amudaryo)", "Tog'lar mintaqasi", "Cho'llar", "Soy bo'ylab hududlar"], a: 0 },
+                { q: "Amir Temurning o'lim sanasi?", opts: ["1405-yil", "1450-yil", "1500-yil", "1380-yil"], a: 0 },
+                { q: "O'zbekiston davlat bayrog'ida nechta yulduz?", opts: ["12 ta", "10 ta", "8 ta", "15 ta"], a: 0 },
+                { q: "Qo'qon xonligi poytaxti?", opts: ["Qo'qon", "Toshkent", "Andijon", "Namangan"], a: 0 }
+            ];
+            const qs = [];
+            for (let i = 0; i < 1000; i++) {
+                const t = topics[i % topics.length];
+                const num = Math.floor(i / topics.length) + 1;
+                qs.push({ q: `[${num}] ${t.q}`, options: t.opts, answer: t.a });
+            }
+            return qs;
+        }
+
+        function generateLangQuestions() {
+            const topics = [
+                { q: "O'zbek alifbosida nechta harf bor?", opts: ["29 ta", "26 ta", "30 ta", "32 ta"], a: 0 },
+                { q: "Faqat undosh tovushlarni toping?", opts: ["b, p, t, k", "a, e, i, o", "o', g'", "u, e, o"], a: 0 },
+                { q: "Faqat unlilar to'g'ri to'plam?", opts: ["a, e, i, o, o', u, g'", "b, v, d, m, n", "sh, ch, ng, g", "f, h, j, l"], a: 0 },
+                { q: "Ismning to'g'ri yozilishi?", opts: ["Olim", "olim", "OLim", "oLiM"], a: 0 },
+                { q: "Rizqimning to'g'ri yig'ilishi?", opts: ["rizq + im", "rizqi + m", "rizqim", "rizqiim"], a: 0 },
+                { q: "Gapning tugash belgisi?", opts: [". (nuqta)", ", (vergul)", "; (nuqta-vergul)", ":"], a: 0 },
+                { q: "Keling, bugun ______ yuramiz. To'ldiring:", opts: ["birga", "bugun", "erdan", "keyin"], a: 0 },
+                { q: "Qaysi so'zda xatolik yo'q?", opts: ["kitobxon", "kitob xon", "kitob-xon", "KitobXon"], a: 0 },
+                { q: "Qo'shmalarni toping:", opts: ["Qoraqalpoq", "kitob", "yurak", "qalam"], a: 0 },
+                { q: "O'zbek tilida qancha unlilar?", opts: ["6 ta (a, e, i, o, u, o')", "10 ta", "4 ta", "8 ta"], a: 0 },
+                { q: "Sinfdagi talabalar ______ o'qishyaptilar. To'ldiring:", opts: ["bilan", "kimda", "qayerda", "qaysi"], a: 0 },
+                { q: "Xato yozilgan so'zni toping:", opts: ["Fakultet", "fakul'tet", "fakultaet", "Fakul'tet"], a: 1 },
+                { q: "Erkaklarga yoziladigan murekkeb:", opts: ["xonzoda, ekan, ketsin", "xonim, ay", "bola, qiz", "uy, ish"], a: 0 },
+                { q: "Gapning boshida qanday harf boshlanadi?", opts: ["Katta harf bilan", "Kichik harf bilan", "Raqam bilan", "Belgi bilan"], a: 0 },
+                { q: "'Chiroyli' so'zi qanday qo'shimchaga ega?", opts: ["-li", "-lik", "-lar", "-ning"], a: 0 }
+            ];
+            const qs = [];
+            for (let i = 0; i < 1000; i++) {
+                const t = topics[i % topics.length];
+                const num = Math.floor(i / topics.length) + 1;
+                qs.push({ q: `[${num}] ${t.q}`, options: t.opts, answer: t.a });
+            }
+            return qs;
+        }
+
+        // ============ STATE ============
+        let QUESTIONS = {};
+        function initQuestions() {
+            QUESTIONS = {
+                math: generateMathQuestions(),
+                phys: generatePhysQuestions(),
+                chem: generateChemQuestions(),
+                bio: generateBioQuestions(),
+                hist: generateHistQuestions(),
+                lang: generateLangQuestions()
+            };
+        }
+
+        let state = {
+            coins: 0,
+            exp: 0,
+            level: 1,
+            name: "Foydalanuvchi",
+            correctTotal: 0,
+            wrongTotal: 0,
+            testsTaken: 0,
+            inventory: {},
+            effects: { doubleCoin: 0, expBoost: 0 },
+            cosmetics: [],
+            subjectStats: {},
+            unlockedRanks: []
+        };
+
+        const LEVEL_EXP = 100;
+
+        function getRank() {
+            if (state.unlockedRanks.includes('master') || state.level >= 50) return { name: 'Master', icon: '👑', cls: 'rank-master' };
+            if (state.unlockedRanks.includes('diamond') || state.level >= 40) return { name: 'Diamond', icon: '💎', cls: 'rank-diamond' };
+            if (state.unlockedRanks.includes('gold') || state.level >= 30) return { name: 'Gold', icon: '🥇', cls: 'rank-gold' };
+            if (state.unlockedRanks.includes('silver') || state.level >= 10) return { name: 'Silver', icon: '🥈', cls: 'rank-silver' };
+            return { name: 'Yangi', icon: '🏅', cls: '' };
+        }
+
+        function expForNextLevel() {
+            return LEVEL_EXP;
+        }
+
+        function currentLevelProgress() {
+            return (state.exp % LEVEL_EXP);
+        }
+
+        function addExp(amount, allowLevelUpAlert = true) {
+            let leveledUp = 0;
+            if (state.effects.expBoost > 0) {
+                amount = Math.floor(amount * 1.5);
+                state.effects.expBoost--;
+            }
+            state.exp += amount;
+            while (state.exp >= state.level * LEVEL_EXP) {
+                state.exp -= state.level * LEVEL_EXP;
+                state.level++;
+                leveledUp++;
+            }
+            saveState();
+            if (leveledUp > 0 && allowLevelUpAlert) return leveledUp;
+            return 0;
+        }
+
+        function addCoins(amount) {
+            if (state.effects.doubleCoin > 0) {
+                amount *= 2;
+                state.effects.doubleCoin--;
+            }
+            state.coins += amount;
+            saveState();
+        }
+
+        // ============ STORAGE ============
+        function saveState() {
+            localStorage.setItem('quizAppState', JSON.stringify(state));
+            updateUI();
+        }
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem('quizAppState');
+                if (saved) state = { ...state, ...JSON.parse(saved) };
+            } catch (e) { }
+        }
+
+        // ============ UI UPDATES ============
+        function updateUI() {
+            document.getElementById('coins-display').textContent = state.coins;
+            document.getElementById('level-display').textContent = state.level;
+            const rank = getRank();
+            const rankBadge = document.getElementById('rank-badge');
+            rankBadge.textContent = `${rank.icon} ${rank.name}`;
+            rankBadge.className = 'stat-badge rank ' + rank.cls;
+
+            if (document.getElementById('input-name')) {
+                document.getElementById('input-name').value = state.name;
+            }
+            if (document.getElementById('stats-display')) {
+                updateStatsDisplay();
+            }
+            if (document.getElementById('inventory-list')) {
+                updateInventory();
+            }
+        }
+
+        function updateStatsDisplay() {
+            const total = state.correctTotal + state.wrongTotal;
+            const acc = total === 0 ? 0 : Math.round(state.correctTotal / total * 100);
+            const rank = getRank();
+            document.getElementById('stats-display').innerHTML = `
+    <div>👤 Ism: <b>${state.name}</b></div>
+    <div>⭐ Level: <b>${state.level}</b> | EXP: <b>${state.exp}</b> / ${state.level * LEVEL_EXP}</div>
+    <div>🏅 Unvon: <b>${rank.icon} ${rank.name}</b></div>
+    <div>🪙 Tangalar: <b>${state.coins}</b></div>
+    <div>📝 Testlar soni: <b>${state.testsTaken}</b></div>
+    <div>✅ To'g'ri javoblar: <b>${state.correctTotal}</b></div>
+    <div>❌ Noto'g'ri javoblar: <b>${state.wrongTotal}</b></div>
+    <div>📊 Aniqlik: <b>${acc}%</b></div>
+    <div>🎒 Inventar: <b>${Object.keys(state.inventory).length}</b> ta narsa</div>
+    <div>✨ Effektlar: DoubleCoin x${state.effects.doubleCoin || 0}, EXPBoost x${state.effects.expBoost || 0}</div>
+  `;
+        }
+
+        // ============ NAVIGATION ============
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            if (page === 'admin') updateStatsDisplay();
+            if (page === 'shop') { renderShop(); updateInventory(); }
+            if (page === 'leaderboard') renderLeaderboard();
+            if (page === 'home') renderSubjects();
+            updateUI();
+        }
+
+        // ============ SUBJECTS ============
+        function renderSubjects() {
+            const grid = document.getElementById('subjects-grid');
+            grid.innerHTML = SUBJECTS.map(s => {
+                const stat = state.subjectStats[s.id] || { correct: 0, total: 0 };
+                const acc = stat.total === 0 ? 0 : Math.round(stat.correct / stat.total * 100);
+                return `
+      <div class="subject-card" onclick="startQuiz('${s.id}')">
+        <div class="subject-icon">${s.icon}</div>
+        <div class="subject-name">${s.name}</div>
+        <div class="subject-count">1000 ta test</div>
+        <div class="subject-count" style="margin-top:10px; color:#84fab0;">Aniqlik: ${acc}%</div>
+      </div>
+    `;
+            }).join('');
+        }
+
+        // ============ QUIZ ============
+        let currentQuiz = null;
+        function startQuiz(subjectId) {
+            const subject = SUBJECTS.find(s => s.id === subjectId);
+            const all = QUESTIONS[subjectId];
+            const selected = shuffle([...all.keys()]).slice(0, 5).map(i => all[i]);
+
+            currentQuiz = {
+                subjectId, subjectName: subject.name, questions: selected,
+                current: 0, correct: 0, wrong: 0, totalCoins: 0, totalExp: 0,
+                answers: [], shownHint: false, usedFifty: false, usedSkip: false
+            };
+
+            document.getElementById('quiz-subject-name').textContent = `${subject.icon} ${subject.name}`;
+            document.getElementById('total-q').textContent = selected.length;
+            showPage('quiz');
+            showQuestion();
+        }
+
+        function updateItemButtons() {
+            if (!document.getElementById('qty-hint')) return;
+            const hint = state.inventory['hint']?.count || 0;
+            const fifty = state.inventory['fifty']?.count || 0;
+            const skip = state.inventory['skip_q']?.count || 0;
+            document.getElementById('qty-hint').textContent = hint;
+            document.getElementById('qty-fifty').textContent = fifty;
+            document.getElementById('qty-skip').textContent = skip;
+
+            if (currentQuiz) {
+                document.getElementById('btn-hint').disabled = hint === 0 || currentQuiz.shownHint || currentQuiz.answers[currentQuiz.current] !== -1;
+                document.getElementById('btn-fifty').disabled = fifty === 0 || currentQuiz.usedFifty || currentQuiz.answers[currentQuiz.current] !== -1;
+                document.getElementById('btn-skip').disabled = skip === 0 || currentQuiz.usedSkip || currentQuiz.answers[currentQuiz.current] !== -1;
+            }
+        }
+
+        function useItem(itemId) {
+            if (!currentQuiz) return;
+            const q = currentQuiz.questions[currentQuiz.current];
+            const correct = q.answer;
+            const opts = Array.from(document.querySelectorAll('.option'));
+
+            if (itemId === 'hint') {
+                if (!state.inventory['hint'] || state.inventory['hint'].count <= 0) return;
+                if (currentQuiz.shownHint) return;
+                state.inventory['hint'].count--;
+                currentQuiz.shownHint = true;
+                const wrongs = [];
+                for (let i = 0; i < q.options.length; i++) {
+                    if (i !== correct) wrongs.push(i);
+                }
+                if (wrongs.length > 0) {
+                    const hideIdx = wrongs[Math.floor(Math.random() * wrongs.length)];
+                    opts[hideIdx].classList.add('hidden-opt');
+                }
+                alert('💡 Maslahat: 1 ta noto\'g\'ri variant yashirildi!');
+            }
+            else if (itemId === 'fifty') {
+                if (!state.inventory['fifty'] || state.inventory['fifty'].count <= 0) return;
+                if (currentQuiz.usedFifty) return;
+                state.inventory['fifty'].count--;
+                currentQuiz.usedFifty = true;
+                const wrongs = [];
+                for (let i = 0; i < q.options.length; i++) {
+                    if (i !== correct) wrongs.push(i);
+                }
+                shuffle(wrongs).slice(0, 2).forEach(i => opts[i].classList.add('hidden-opt'));
+                alert('🎯 50/50 ishladi: 2 ta noto\'g\'ri variant yashirildi!');
+            }
+            else if (itemId === 'skip_q') {
+                if (!state.inventory['skip_q'] || state.inventory['skip_q'].count <= 0) return;
+                if (currentQuiz.usedSkip) return;
+                state.inventory['skip_q'].count--;
+                currentQuiz.usedSkip = true;
+                opts.forEach(o => o.style.pointerEvents = 'none');
+                if (Math.random() < 0.5) {
+                    opts[correct].classList.add('correct');
+                    currentQuiz.correct++;
+                    currentQuiz.totalCoins += 5;
+                    currentQuiz.totalExp += 10;
+                    currentQuiz.answers[currentQuiz.current] = correct;
+                    alert('⏭️ O\'tkazildi va omadli bo\'ldi! +5 tanga +10 EXP');
+                } else {
+                    currentQuiz.wrong++;
+                    currentQuiz.answers[currentQuiz.current] = -2;
+                    alert('⏭️ O\'tkazildi, ammo omadli bo\'lmadi.');
+                }
+                document.getElementById('next-btn').disabled = false;
+            }
+            saveState();
+            updateItemButtons();
+        }
+
+        function showQuestion() {
+            const quiz = currentQuiz;
+            if (quiz.current >= quiz.questions.length) return finishQuiz();
+
+            const q = quiz.questions[quiz.current];
+            document.getElementById('current-q').textContent = quiz.current + 1;
+            document.getElementById('progress-fill').style.width = ((quiz.current) / quiz.questions.length * 100) + '%';
+            document.getElementById('question-text').textContent = q.q;
+            document.getElementById('next-btn').disabled = true;
+
+            const opts = document.getElementById('options-container');
+            const letters = ['A', 'B', 'C', 'D'];
+            opts.innerHTML = q.options.map((opt, i) => `
+    <div class="option" data-idx="${i}" onclick="selectAnswer(${i}, this)">
+      <div class="option-letter">${letters[i]}</div>
+      <div class="option-text">${opt}</div>
+    </div>
+  `).join('');
+
+            quiz.answers[quiz.current] = -1;
+            quiz.shownHint = false;
+            quiz.usedFifty = false;
+            quiz.usedSkip = false;
+            updateItemButtons();
+        }
+
+        function selectAnswer(idx, el) {
+            const quiz = currentQuiz;
+            if (quiz.answers[quiz.current] !== -1) return;
+            quiz.answers[quiz.current] = idx;
+
+            const correct = quiz.questions[quiz.current].answer;
+            document.querySelectorAll('.option').forEach(o => o.style.pointerEvents = 'none');
+
+            if (idx === correct) {
+                el.classList.add('correct');
+                quiz.correct++;
+                quiz.totalCoins += 5;
+                quiz.totalExp += 10;
+            } else {
+                el.classList.add('wrong');
+                quiz.wrong++;
+                document.querySelectorAll('.option')[correct].classList.add('correct');
+            }
+            document.getElementById('next-btn').disabled = false;
+            updateItemButtons();
+        }
+
+        function nextQuestion() {
+            currentQuiz.current++;
+            showQuestion();
+        }
+
+        function quitQuiz() {
+            if (confirm('Testdan chiqishni xohlaysizmi? Progress saqlanmaydi!')) {
+                currentQuiz = null;
+                showPage('home');
+            }
+        }
+
+        function finishQuiz() {
+            const quiz = currentQuiz;
+            const total = quiz.questions.length;
+            const percent = Math.round(quiz.correct / total * 100);
+
+            const leveledUp = addExp(quiz.totalExp, false);
+            state.correctTotal += quiz.correct;
+            state.wrongTotal += quiz.wrong;
+            state.testsTaken++;
+            const before = state.subjectStats[quiz.subjectId] || { correct: 0, total: 0 };
+            state.subjectStats[quiz.subjectId] = { correct: before.correct + quiz.correct, total: before.total + total };
+
+            const oldRank = getRank();
+            addCoins(quiz.totalCoins);
+            const newRank = getRank();
+
+            document.getElementById('result-correct').textContent = quiz.correct;
+            document.getElementById('result-wrong').textContent = quiz.wrong;
+            document.getElementById('result-percent').textContent = percent + '%';
+            document.getElementById('result-coins').textContent = quiz.totalCoins;
+            document.getElementById('result-exp').textContent = '+' + quiz.totalExp;
+
+            let levelUpHTML = '';
+            if (leveledUp > 0) {
+                levelUpHTML += `<div class="level-up">🎉 Tabriklaymiz! ${leveledUp} level oshdingiz! (Joriy: ${state.level})</div>`;
+            }
+            if (oldRank.name !== newRank.name) {
+                levelUpHTML += `<div class="level-up">🏆 Yangi unvon: ${newRank.icon} ${newRank.name}</div>`;
+            }
+            document.getElementById('level-up-alert').innerHTML = levelUpHTML;
+
+            document.getElementById('result-modal').classList.add('active');
+            saveState();
+        }
+
+        function restartQuiz() {
+            const sid = currentQuiz.subjectId;
+            document.getElementById('result-modal').classList.remove('active');
+            startQuiz(sid);
+        }
+
+        function goHome() {
+            document.getElementById('result-modal').classList.remove('active');
+            currentQuiz = null;
+            showPage('home');
+        }
+
+        // ============ SHOP ============
+        function renderShop() {
+            document.getElementById('shop-grid').innerHTML = SHOP_ITEMS.map(item => {
+                const owned = state.inventory[item.id] ? state.inventory[item.id].count || 0 : 0;
+                const unlocked = item.type === 'unlock' && state.unlockedRanks.includes(item.value);
+                return `
+      <div class="shop-item">
+        <div class="shop-icon">${item.icon}</div>
+        <div class="shop-name">${item.name}</div>
+        <div class="shop-desc">${item.desc}</div>
+        <div class="shop-price">🪙 ${item.price}</div>
+        ${owned > 0 && !unlocked ? `<div class="shop-owned">Sizda: ${owned} ta</div>` : ''}
+        ${unlocked ? `<div class="shop-owned">✅ Ochilgan</div>` : ''}
+        <button class="btn ${unlocked ? 'btn-outline' : 'btn-success'}" ${unlocked ? 'disabled' : ''} onclick="buyItem('${item.id}')">
+          ${unlocked ? 'Olingan' : 'Sotib olish'}
+        </button>
+      </div>
+    `;
+            }).join('');
+        }
+
+        function buyItem(id) {
+            const item = SHOP_ITEMS.find(i => i.id === id);
+            if (!item) return;
+            if (state.coins < item.price) return alert('Tangalar yetarli emas!');
+
+            if (item.type === 'unlock') {
+                if (state.unlockedRanks.includes(item.value)) return alert('Allaqachon ochilgan!');
+                state.unlockedRanks.push(item.value);
+            } else if (item.type === 'effect') {
+                if (item.value.doubleCoin) state.effects.doubleCoin += item.value.doubleCoin;
+                if (item.value.expBoost) state.effects.expBoost += item.value.expBoost;
+            } else if (item.type === 'cosmetic') {
+                if (!state.cosmetics.includes(item.value)) state.cosmetics.push(item.value);
+            } else {
+                if (!state.inventory[id]) state.inventory[id] = { count: 0 };
+                state.inventory[id].count += (item.uses || 1);
+            }
+
+            state.coins -= item.price;
+            saveState();
+            renderShop();
+            updateInventory();
+            alert(`✅ "${item.name}" sotib olindi!`);
+        }
+
+        function useItemFromInventory(id) {
+            if (id === 'coin_chest') {
+                if (!state.inventory['coin_chest'] || state.inventory['coin_chest'].count <= 0) return;
+                state.inventory['coin_chest'].count--;
+                const item = SHOP_ITEMS.find(i => i.id === 'coin_chest');
+                const won = Math.floor(Math.random() * (item.value.max - item.value.min + 1)) + item.value.min;
+                state.coins += won;
+                alert(`🎁 Sandiq ochildi! Siz ${won} tanga yutdingiz!`);
+                saveState();
+                updateInventory();
+                return;
+            }
+            alert(`ℹ️ "${SHOP_ITEMS.find(i => i.id === id)?.name || id}" - test paytida ishlatiladi. Testga kirib, yuqoridagi tugmalar orqali foydalaning.`);
+        }
+
+        function updateInventory() {
+            const inv = state.inventory;
+            const items = Object.entries(inv).filter(([k, v]) => v.count > 0);
+            const cosmetics = state.cosmetics;
+            const effects = state.effects;
+            if (!state.activeCosmetics) state.activeCosmetics = [];
+
+            let html = '';
+            if (effects.doubleCoin > 0) {
+                html += `<div class="inventory-item"><span>💎 2x Tanga (effekt)</span><b style="color:#84fab0;">${effects.doubleCoin} ta testgacha</b></div>`;
+            }
+            if (effects.expBoost > 0) {
+                html += `<div class="inventory-item"><span>⚡ EXP Boost (effekt)</span><b style="color:#84fab0;">${effects.expBoost} ta testgacha</b></div>`;
+            }
+            if (items.length === 0 && cosmetics.length === 0 && effects.doubleCoin === 0 && effects.expBoost === 0) {
+                html = `<div style="text-align:center; color:rgba(255,255,255,0.5); padding:20px;">Inventar bo'sh. Do'kondan nima-dir sotib oling!</div>`;
+            }
+            items.forEach(([id, data]) => {
+                const item = SHOP_ITEMS.find(i => i.id === id);
+                if (item) {
+                    const canUseNow = (id === 'coin_chest');
+                    const btn = canUseNow
+                        ? `<button class="btn btn-success" style="padding:6px 14px; font-size:13px;" onclick="useItemFromInventory('${id}')">🎁 Ochiq</button>`
+                        : `<span style="color:#f6d365; font-size:12px;">Testda ishlatiladi</span>`;
+                    html += `<div class="inventory-item">
+                        <span>${item.icon} ${item.name}</span>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <b>${data.count} marta</b>
+                            ${btn}
+                        </div>
+                    </div>`;
+                }
+            });
+            cosmetics.forEach(c => {
+                const item = SHOP_ITEMS.find(i => i.value === c && i.type === 'cosmetic');
+                if (item) {
+                    const active = state.activeCosmetics.includes(c);
+                    html += `<div class="inventory-item">
+                        <span>${item.icon} ${item.name} (Kosmetika)</span>
+                        <button class="btn ${active ? 'btn-danger' : 'btn-primary'}" style="padding:6px 14px; font-size:13px;" onclick="toggleCosmetic('${c}')">
+                            ${active ? '❌ O\'chirish' : '✅ Yoqish'}
+                        </button>
+                    </div>`;
+                }
+            });
+            document.getElementById('inventory-list').innerHTML = html;
+        }
+
+        // ============ ADMIN ============
+        const COIN_PACKS = [
+            { amount: 20, cost: '🆓 Bepul' },
+            { amount: 50, cost: '🆓 Bepul' },
+            { amount: 100, cost: '🆓 Bepul' },
+            { amount: 250, cost: '🆓 Bepul' },
+            { amount: 500, cost: '🆓 Bepul' },
+            { amount: 999999999, cost: '🆓 Bepul' }
+        ];
+
+        function renderCoinPacks() {
+            document.getElementById('coins-grid').innerHTML = COIN_PACKS.map((p, i) => `
+    <div class="coin-pack" onclick="addCoinPack(${p.amount})">
+      <div class="coin-pack-amount">🪙 ${p.amount}</div>
+      <div class="coin-pack-cost">${p.cost}</div>
+    </div>
+  `).join('');
+        }
+
+        function addCoinPack(amount) {
+            addCoins(amount);
+            alert(`✅ ${amount} tanga qo'shildi!`);
+        }
+
+        function saveName() {
+            const name = document.getElementById('input-name').value.trim();
+            if (!name) return alert('Ismni kiriting!');
+            state.name = name;
+            saveState();
+            alert("✅ Ism saqlandi!");
+        }
+
+        function resetProgress() {
+            if (!confirm('Barcha progressni o\'chirmoqchimisiz? Bu amal qaytarilmaydi!')) return;
+            state = {
+                coins: 0, exp: 0, level: 1, name: "Foydalanuvchi",
+                correctTotal: 0, wrongTotal: 0, testsTaken: 0,
+                inventory: {}, effects: { doubleCoin: 0, expBoost: 0 },
+                cosmetics: [], subjectStats: {}, unlockedRanks: []
+            };
+            saveState();
+            alert("✅ Progress tozalandi!");
+        }
+
+        function addExpBonus() {
+            const oldLevel = state.level;
+            const leveled = addExp(1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000);
+            alert(`✅ +100 EXP qo'shildi! ${leveled > 0 ? `\n🎉 ${leveled} level oshdingiz!` : ''}`);
+        }
+
+        // ============ LEADERBOARD ============
+        function generateFakeLeaderboard() {
+            const names = ["Ali", "Vali", "Hasan", "Husan", "Zuhra", "Shahnoza", "Bobur", "Dilshod", "Farrux", "Gulnora", "Zokir", "Olim", "Salim", "Madina", "Feruza"];
+            return names.map((n, i) => ({
+                name: n,
+                level: Math.max(1, 55 - i * 3 - Math.floor(Math.random() * 5)),
+                coins: Math.floor(Math.random() * 5000) + 500,
+                correct: Math.floor(Math.random() * 2000) + 100
+            })).concat([{ name: state.name + ' (Siz)', level: state.level, coins: state.coins, correct: state.correctTotal, me: true }])
+                .sort((a, b) => (b.level * 10000 + b.correct) - (a.level * 10000 + a.correct));
+        }
+
+        function renderLeaderboard() {
+            const board = generateFakeLeaderboard();
+            const html = board.map((row, i) => {
+                let icon = i + 1;
+                if (i === 0) icon = '🥇';
+                else if (i === 1) icon = '🥈';
+                else if (i === 2) icon = '🥉';
+                const topCls = i === 0 ? 'top-1' : i === 1 ? 'top-2' : i === 2 ? 'top-3' : '';
+                const rankCls = (row.me) ? ' style="border:2px solid #f6d365;"' : '';
+                return `
+      <div class="leaderboard-row ${topCls}"${rankCls}>
+        <div class="rank-num">${icon}</div>
+        <div><b>${row.name}</b></div>
+        <div style="text-align:center;">⭐ LVL ${row.level}</div>
+        <div style="text-align:center;">🪙 ${row.coins}</div>
+      </div>
+    `;
+            }).join('');
+            document.getElementById('leaderboard').innerHTML = html;
+        }
+
+        // ============ COSMETICS ============
+        function applyCosmetics() {
+            document.body.classList.remove('theme-neon');
+            if (!state.activeCosmetics) state.activeCosmetics = [];
+            if (state.activeCosmetics.includes('neon')) {
+                document.body.classList.add('theme-neon');
+            }
+            let cat = document.getElementById('pet-cat-float');
+            if (cat) cat.remove();
+            if (state.activeCosmetics.includes('cat')) {
+                cat = document.createElement('div');
+                cat.id = 'pet-cat-float';
+                cat.className = 'pet-cat';
+                cat.textContent = '🐱';
+                cat.title = 'Mushuk uy hayvoni - sizning do\'stingiz!';
+                document.body.appendChild(cat);
+            }
+        }
+
+        function toggleCosmetic(value) {
+            if (!state.cosmetics.includes(value)) return alert('Avval sotib oling!');
+            if (state.activeCosmetics && state.activeCosmetics.includes(value)) {
+                state.activeCosmetics = state.activeCosmetics.filter(v => v !== value);
+                alert('❌ O\'chirildi.');
+            } else {
+                if (!state.activeCosmetics) state.activeCosmetics = [];
+                state.activeCosmetics.push(value);
+                alert('✅ Faollashtirildi!');
+            }
+            saveState();
+            applyCosmetics();
+        }
+
+        // ============ HELPERS ============
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // ============ INIT ============
+        window.onload = function () {
+            initQuestions();
+            loadState();
+            renderSubjects();
+            renderCoinPacks();
+            applyCosmetics();
+            updateUI();
+        };
+    </script>
+</body>
+
+</html>
